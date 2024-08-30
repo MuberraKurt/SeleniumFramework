@@ -22,10 +22,4 @@ public class LoginPage extends AbstractComponent {
     @FindBy(id ="signinButton")
     public WebElement loginButton;
 
-    public void loginApplication(String username, String password){
-        userName.sendKeys(username);
-        passwordElement.sendKeys(password);
-        loginButton.click();
-    }
-
 }

@@ -24,20 +24,18 @@ public class LoginSteps extends BaseTest {
 
     @Given("Click signin button")
     public void clickSigninButton() {
-        homePage.waitForElementToAppear(homePage.siginButton);
-        homePage.siginButton.click();
+        homePage.click(homePage.siginButton);
     }
 
     @And("Log in with userName (.+) and password (.+)$")
     public void logInWithUserNameUserNameAndPasswordPassword(String userName, String password) {
-        loginPage.waitForElementToAppear(loginPage.userName);
-        loginPage.userName.sendKeys(userName);
-        loginPage.passwordElement.sendKeys(password);
+        loginPage.sendKeysToElement(loginPage.userName,userName);
+        loginPage.sendKeysToElement(loginPage.passwordElement,password);
     }
 
     @When("Click login button")
     public void clickLoginButton() {
-        loginPage.loginButton.click();
+        loginPage.click(loginPage.loginButton);
     }
 
     @Then("MyForms button is displayed on HomePage")
