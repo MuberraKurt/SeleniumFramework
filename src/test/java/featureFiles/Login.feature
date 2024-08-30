@@ -12,4 +12,4 @@ Feature: Login
 
     Examples:
     |userName               | password |
-    |muberrakurt5@gmail.com | Kelebe1.|
+    |muberrakurt5@gmail.com | Kelebek1.|
