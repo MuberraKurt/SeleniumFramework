@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="testSuites">
+<listeners>
+    <listener class-name="testComponents.Listeners"></listener>
+</listeners>
+
+    <test thread-count="2" name="TestRunner">
+        <classes>
+            <class name="Runner.TestRunner"></class>
+        </classes>
+    </test>
+    <!--<test verbose="2" preserve-order="true" name="otherTest">
+        <classes>
+
+        </classes>
+    </test>-->
+</suite>
