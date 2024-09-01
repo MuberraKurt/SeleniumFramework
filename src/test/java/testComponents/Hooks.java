@@ -11,6 +11,8 @@ public class Hooks extends BaseTest{
     @Before
     public void beforeScenario() throws IOException {
         initializeDriver();
+        getLoginPage();
+        getFormBuilderPage();
     }
 
     @After

@@ -1,6 +1,7 @@
 package pageobjects;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -12,9 +13,11 @@ import java.time.Duration;
 
 public class AbstractComponent {
     WebDriver driver;
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    WebDriverWait wait ;
+
     public AbstractComponent(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(25));
     }
 
     public void waitForElementToAppear(WebElement element){
@@ -22,7 +25,12 @@ public class AbstractComponent {
     }
 
     public void waitForElementClickable(WebElement element){
-        wait.until(ExpectedConditions.elementToBeClickable(element));
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+        } catch (TimeoutException e) {
+            System.err.println("Element not clickable: " + element.toString());
+            throw e; // Rethrow the exception if needed for test failure
+        }
     }
 
     public void waitForElementToDisappear(WebElement element){

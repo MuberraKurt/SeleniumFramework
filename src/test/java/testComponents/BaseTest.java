@@ -1,24 +1,16 @@
 package testComponents;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.BeforeAll;
-import io.cucumber.java.Scenario;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeMethod;
-import pageobjects.HomePage;
-import pageobjects.LoginPage;
+import pageobjects.FormBuilderPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.testng.annotations.AfterMethod;
+import pageobjects.LoginPage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,12 +21,12 @@ import java.time.Duration;
 import java.util.Properties;
 
 public class BaseTest {
-    public HomePage homePage ;
-    public LoginPage loginPage ;
+    private static LoginPage loginPage;
+    private static FormBuilderPage formBuilderPage;
     private static String browserName;
     private static WebDriver driver;
 
-    public WebDriver getDriver() {
+    public static WebDriver getDriver() {
         return driver;
     }
 
@@ -96,9 +88,21 @@ public class BaseTest {
     }
 
 
-
     // Tarayıcı adını elde etmek için metod
     public String getBrowserName() {
         return browserName;
+    }
+    public static LoginPage getLoginPage() {
+        if (loginPage == null) {
+            loginPage = new LoginPage(getDriver());
+        }
+        return loginPage;
+    }
+
+    public static FormBuilderPage getFormBuilderPage() {
+        if (formBuilderPage == null) {
+            formBuilderPage = new FormBuilderPage(getDriver(), getLoginPage()); // Pass dependencies if needed
+        }
+        return formBuilderPage;
     }
 }

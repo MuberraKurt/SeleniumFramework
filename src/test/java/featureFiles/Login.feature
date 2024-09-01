@@ -1,15 +1,14 @@
-@tag
-Feature: Login
-  Background:
-    Given I landed on Jotform Page
+@E2e
+Feature: Creating new form
 
-  @Regression
-  Scenario Outline: Login successfully
-    Given Click signin button
-    And Log in with userName <userName> and password <password>
-    When Click login button
-    Then MyForms button is displayed on HomePage
+  @Login
+  Scenario: Login to Jotform
+    Given User launches the website
+    When User gives the username and password
+    Then Verify logged in succesfully
 
-    Examples:
-    |userName               | password |
-    |muberrakurt5@gmail.com | Kelebek1.|
+  @CreateForm
+  Scenario: Creating a new form
+    Given User lands on the Form Builder page
+    When User selects the items and add them to the form
+    Then Verify the form is created
