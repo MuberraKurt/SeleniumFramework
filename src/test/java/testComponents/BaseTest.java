@@ -29,13 +29,16 @@ import java.time.Duration;
 import java.util.Properties;
 
 public class BaseTest {
-    public static WebDriver driver;
     public HomePage homePage ;
     public LoginPage loginPage ;
-    public String browserName;
+    private static String browserName;
+    private static WebDriver driver;
 
+    public WebDriver getDriver() {
+        return driver;
+    }
 
-    public WebDriver initializeDriver() throws IOException {
+    public static WebDriver initializeDriver() throws IOException {
 
         Properties prop = new Properties();
         FileInputStream fis = new FileInputStream("/Users/muberrakurt/Documents/JotformFramework/src/main/resources/GlobalData.properties");
@@ -90,5 +93,12 @@ public class BaseTest {
                 driver = null; // Tarayıcıyı null yap
             }
         }
+    }
+
+
+
+    // Tarayıcı adını elde etmek için metod
+    public String getBrowserName() {
+        return browserName;
     }
 }

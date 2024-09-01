@@ -15,7 +15,7 @@ public class Hooks extends BaseTest{
 
     @After
     public void afterScenario(Scenario scenario) {
-        if (driver != null) {
+        if (getDriver() != null) {
             closeDriver(); // Ensure proper cleanup of WebDriver
         }
     }

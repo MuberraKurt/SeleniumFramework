@@ -16,10 +16,9 @@ public class LoginSteps extends BaseTest {
 
     @Given("I landed on Jotform Page")
     public void ıLandedOnJotformPage() throws IOException {
-        driver=initializeDriver();
-        homePage = new HomePage(driver);
-        loginPage = new LoginPage(driver);
-        driver.get("https://jotform.com");
+        homePage = new HomePage(getDriver());
+        loginPage = new LoginPage(getDriver());
+        getDriver().get("https://jotform.com");
     }
 
     @Given("Click signin button")
@@ -42,7 +41,7 @@ public class LoginSteps extends BaseTest {
     public void myformsButtonIsDisplayedOnHomePage() {
         homePage.waitForElementToAppear(homePage.MyFormsbutton);
         Assert.assertTrue(homePage.MyFormsbutton.isDisplayed());
-        driver.close();
+        getDriver().close();
     }
 
 

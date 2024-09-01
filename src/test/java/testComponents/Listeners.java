@@ -14,8 +14,15 @@ public class Listeners extends BaseTest implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result) {
+        if (getDriver() == null) {
+            try {
+                initializeDriver();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         test = extent.createTest(result.getMethod().getMethodName());
-        test.info("Browser: "+ browserName);
+        test.info("Browser: "+ getBrowserName());
         test.info("Operating System: " + System.getProperty("os.name"));
         test.info("Test Start Time: " + java.time.LocalDateTime.now());
     }
@@ -28,16 +35,17 @@ public class Listeners extends BaseTest implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        test.fail(result.getThrowable());
-
-        String screenshotPath = getScreenshot(result.getMethod().getMethodName());
-        try {
-            test.addScreenCaptureFromPath(screenshotPath, result.getMethod().getMethodName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (driver != null) {
+        test.fail(result.getThrowable().getMessage());
+        if (getDriver() != null) {
+            String screenshotPath = getScreenshot(result.getMethod().getMethodName());
+            try {
+                test.addScreenCaptureFromPath(screenshotPath, result.getMethod().getMethodName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             closeDriver();
+        } else {
+            test.fail("Driver is null, cannot take screenshot.");
         }
     }
 
