@@ -17,81 +17,86 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Properties;
 
 public class BaseTest {
     private static LoginPage loginPage;
     private static FormBuilderPage formBuilderPage;
     private static String browserName;
-    private static WebDriver driver;
+    private static Properties prop;
+    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
-        return driver;
+        return driver.get();
     }
 
     public static WebDriver initializeDriver() throws IOException {
+        if (getDriver() == null) {
 
-        Properties prop = new Properties();
-        FileInputStream fis = new FileInputStream("/Users/muberrakurt/Documents/JotformFramework/src/main/resources/GlobalData.properties");
-        prop.load(fis);
+            browserName = getGlobalValue("browser") != null ? getGlobalValue("browser") : prop.getProperty("browser");
 
-        browserName = System.getProperty("browser")!=null ? System.getProperty("browser") :prop.getProperty("browser");
-
-        if(browserName.contains("chrome")) {
-            ChromeOptions chromeOptions = new ChromeOptions();
-            WebDriverManager.chromedriver().setup();
-            if(browserName.contains("headless")) {
-                chromeOptions.addArguments("headless");
+            if (browserName.contains("chrome")) {
+                ChromeOptions chromeOptions = new ChromeOptions();
+                WebDriverManager.chromedriver().setup();
+                if (browserName.contains("headless")) {
+                    chromeOptions.addArguments("headless");
+                }
+                driver.set(new ChromeDriver(chromeOptions));
+                getDriver().manage().window().setSize(new Dimension(1440, 900));
+            } else if (browserName.equalsIgnoreCase("firefox")) {
+                WebDriverManager.firefoxdriver().setup();
+                driver.set(new FirefoxDriver());
+            } else if (browserName.equalsIgnoreCase("edge")) {
+                WebDriverManager.edgedriver().setup();
+                driver.set(new EdgeDriver());
             }
-
-            driver = new ChromeDriver(chromeOptions);
-            driver.manage().window().setSize(new Dimension(1440,900));
-
-        } else if (browserName.equalsIgnoreCase("firefox")) {
-            System.setProperty("geckodriver","/Users/muberrakurt/Downloads/geckodriver");
-            driver= new FirefoxDriver();
-
-        } else if (browserName.equalsIgnoreCase("edge")) {
-            System.setProperty("webdriver.edge.driver","edge.exe");
-            driver = new EdgeDriver();
+            getDriver().manage().deleteAllCookies();
+            getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            getDriver().manage().window().maximize();
         }
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().window().maximize();
 
-        return driver;
+        return getDriver();
     }
 
-
-    public String getScreenshot(String testName) {
-        File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        String destFile = System.getProperty("user.dir") + "/reports/" + testName +" | " + java.time.LocalDateTime.now() + ".png";
-        try {
-            Files.copy(srcFile.toPath(), Paths.get(destFile));
-        } catch (IOException e) {
-            e.printStackTrace();
+    public String getScreenshot(String scenarioName ,String testName) {
+        WebDriver driver = getDriver();
+        if (driver != null) {
+            File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String screenshotFolder = System.getProperty("user.dir") + "/reports/" + scenarioName + "_" + date + "/ss";
+            String destFile = screenshotFolder + "/" + testName + "_" + date + ".png";
+            //String destFile = System.getProperty("user.dir") + "/reports/" + testName + "_" + java.time.LocalDateTime.now() + ".png";
+            new File(screenshotFolder).mkdirs();
+            try {
+                Files.copy(srcFile.toPath(), Paths.get(destFile));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return destFile;
+        } else {
+            return "Driver is null, screenshot not taken.";
         }
-        return destFile;
     }
 
-
-    public void closeDriver(){
+    public static void closeDriver() {
+        WebDriver driver = getDriver();
         if (driver != null) {
             try {
-                driver.quit(); // Tarayıcıyı kapat
+                driver.quit();
+                // Ensure the ThreadLocal variable is cleaned up
             } catch (Exception e) {
-                System.err.println("Tarayıcıyı kapatma sırasında hata oluştu: " + e.getMessage()); // Hata mesajını logla
-            } finally {
-                driver = null; // Tarayıcıyı null yap
+                System.err.println("Tarayıcıyı kapatma sırasında hata oluştu: " + e.getMessage());
             }
         }
     }
 
-
-    // Tarayıcı adını elde etmek için metod
     public String getBrowserName() {
         return browserName;
     }
+
     public static LoginPage getLoginPage() {
         if (loginPage == null) {
             loginPage = new LoginPage(getDriver());
@@ -104,5 +109,12 @@ public class BaseTest {
             formBuilderPage = new FormBuilderPage(getDriver(), getLoginPage()); // Pass dependencies if needed
         }
         return formBuilderPage;
+    }
+
+    public static String getGlobalValue(String key) throws IOException {
+        prop = new Properties();
+        FileInputStream fis=new FileInputStream("/Users/muberrakurt/Desktop/JotformFramework1/src/test/resources/GlobalData.properties");
+        prop.load(fis);
+        return prop.getProperty(key);
     }
 }

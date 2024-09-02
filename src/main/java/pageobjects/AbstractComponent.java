@@ -17,7 +17,7 @@ public class AbstractComponent {
 
     public AbstractComponent(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(25));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     public void waitForElementToAppear(WebElement element){
@@ -79,5 +79,10 @@ public class AbstractComponent {
     public String getCurrentUrl(){
         String url = driver.getCurrentUrl();
         return url;
+    }
+    public void hoverAndClick(WebElement hoverElement,WebElement clickElement){
+        Actions clicker=new Actions(driver);
+        clicker.moveToElement(hoverElement).perform();
+        click(clickElement);
     }
 }

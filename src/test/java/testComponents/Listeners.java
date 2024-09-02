@@ -9,18 +9,12 @@ import java.io.IOException;
 
 
 public class Listeners extends BaseTest implements ITestListener {
-    ExtentReports extent = ExtentReporterNG.getReportObject();
+    ITestResult testResult;
+    ExtentReports extent = ExtentReporterNG.getReportObject("TestResult");
     ExtentTest test;
 
     @Override
     public void onTestStart(ITestResult result) {
-        if (getDriver() == null) {
-            try {
-                initializeDriver();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         test = extent.createTest(result.getMethod().getMethodName());
         test.info("Browser: "+ getBrowserName());
         test.info("Operating System: " + System.getProperty("os.name"));
@@ -35,15 +29,16 @@ public class Listeners extends BaseTest implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
+        String scenarioName = result.getMethod().getXmlTest().getName();  // Senaryo adını al
+        String testName = result.getMethod().getMethodName();
         test.fail(result.getThrowable().getMessage());
         if (getDriver() != null) {
-            String screenshotPath = getScreenshot(result.getMethod().getMethodName());
+            String screenshotPath = getScreenshot(scenarioName, testName);
             try {
-                test.addScreenCaptureFromPath(screenshotPath, result.getMethod().getMethodName());
+                test.addScreenCaptureFromPath(screenshotPath, testName);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-            closeDriver();
         } else {
             test.fail("Driver is null, cannot take screenshot.");
         }
