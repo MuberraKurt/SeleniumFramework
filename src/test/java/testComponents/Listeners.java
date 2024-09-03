@@ -1,3 +1,4 @@
+/*
 package testComponents;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -6,12 +7,20 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class Listeners extends BaseTest implements ITestListener {
-    ITestResult testResult;
-    ExtentReports extent = ExtentReporterNG.getReportObject("TestResult");
-    ExtentTest test;
+    private ExtentReports extent;
+    private ExtentTest test;
+    private String timestamp;
+
+    public Listeners() {
+        // Generate the timestamp once for the entire test run
+        this.timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        this.extent = ExtentReporterNG.getReportObject("TestRunner", timestamp);
+    }
 
     @Override
     public void onTestStart(ITestResult result) {
@@ -29,15 +38,17 @@ public class Listeners extends BaseTest implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        String scenarioName = result.getMethod().getXmlTest().getName();  // Senaryo adını al
+        String scenarioName = result.getMethod().getXmlTest().getName();
         String testName = result.getMethod().getMethodName();
+        test = extent.createTest(testName);
         test.fail(result.getThrowable().getMessage());
+
         if (getDriver() != null) {
-            String screenshotPath = getScreenshot(scenarioName, testName);
+            String screenshotPath = getScreenshot(scenarioName, testName, timestamp);
             try {
                 test.addScreenCaptureFromPath(screenshotPath, testName);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                test.fail("Failed to attach screenshot: " + e.getMessage());
             }
         } else {
             test.fail("Driver is null, cannot take screenshot.");
@@ -48,4 +59,4 @@ public class Listeners extends BaseTest implements ITestListener {
     public void onFinish(ITestContext context) {
         extent.flush();
     }
-}
+}*/

@@ -61,14 +61,12 @@ public class BaseTest {
         return getDriver();
     }
 
-    public String getScreenshot(String scenarioName ,String testName) {
+    /*public String getScreenshot(String scenarioName, String testName, String timestamp) {
         WebDriver driver = getDriver();
         if (driver != null) {
             File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String screenshotFolder = System.getProperty("user.dir") + "/reports/" + scenarioName + "_" + date + "/ss";
-            String destFile = screenshotFolder + "/" + testName + "_" + date + ".png";
-            //String destFile = System.getProperty("user.dir") + "/reports/" + testName + "_" + java.time.LocalDateTime.now() + ".png";
+            String screenshotFolder = System.getProperty("user.dir") + "/reports/" + scenarioName + "_" + timestamp + "/ss";
+            String destFile = screenshotFolder + "/" + testName + "_" + timestamp + ".png";
             new File(screenshotFolder).mkdirs();
             try {
                 Files.copy(srcFile.toPath(), Paths.get(destFile));
@@ -79,7 +77,7 @@ public class BaseTest {
         } else {
             return "Driver is null, screenshot not taken.";
         }
-    }
+    }*/
 
     public static void closeDriver() {
         WebDriver driver = getDriver();
