@@ -1,9 +1,6 @@
 package pageobjects;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -17,7 +14,7 @@ public class AbstractComponent {
 
     public AbstractComponent(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     public void waitForElementToAppear(WebElement element){
@@ -84,5 +81,25 @@ public class AbstractComponent {
         Actions clicker=new Actions(driver);
         clicker.moveToElement(hoverElement).perform();
         click(clickElement);
+    }
+
+    public void handleAlert() {
+        try {
+            Alert alert = driver.switchTo().alert();
+            alert.accept(); // Accept the alert
+            System.out.println("JavaScript alert closed successfully.");
+
+        } catch (NoAlertPresentException e) {
+            System.out.println("No alert was present.");
+        } catch (NoSuchElementException e) {
+            System.out.println("Close alert button not found.");
+        } catch (TimeoutException e) {
+            System.out.println("Timeout waiting for close button to be clickable.");
+        }
+
+    }
+    public void doubleClick(WebElement element) {
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element).doubleClick().perform();
     }
 }

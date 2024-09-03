@@ -60,12 +60,19 @@ public class LoginPage extends AbstractComponent {
     @FindBy(css=".jfHeader-menuListItem.hasSubMenu.hasIcon.subMenuTitleProducts")
     public WebElement products;
 
+    @FindBy(xpath = "(//ul[@class='jfHeader-menuList jfHeader-menubsg']//li)[1]")
+    public WebElement templates;
+
+        //Template Submenu
+    @FindBy(xpath = "(//li[@class='jfHeader-subMenuItem']//a)[1]")
+    public WebElement formTemplates;
+
         //Products Submenu
     @FindBy(xpath = "//a[@data-text-name='formBuilder']")
     public WebElement formBuilder;
 
-    @FindBy(css=".folderItem.forCreateFolder")
-    public WebElement testd;
+    @FindBy(xpath = "(//div[@class='lsApp-list-item-title'])[1]")
+    public WebElement titleofTheForm;
 
         //---
 

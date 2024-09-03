@@ -10,22 +10,29 @@ import testComponents.BaseTest;
 import java.io.IOException;
 
 public class LoginSteps extends BaseTest {
+    private LoginPage loginPage;
+
+    public LoginSteps(){
+        this.loginPage=getLoginPage();
+    }
 
     @Given("User launches the website")
     public void userLaunchesTheWebsite() throws IOException {
-
-        getLoginPage().Launch_the_Website(getGlobalValue("url"));
+        getDriver().get(getGlobalValue("url"));
     }
 
     @When("User gives the username and password")
     public void userGivesTheUsernameAndPassword() {
 
-        getLoginPage().Login("muberrakurt5@gmail.com","Kelebek1.");
+        loginPage.click(loginPage.siginButton);
+        loginPage.sendKeysToElement(loginPage.userNameField,"muberrakurt5@gmail.com");
+        loginPage.sendKeysToElement(loginPage.passwordField,"Kelebek1.");
+        loginPage.click(loginPage.loginButton);
     }
 
 
     @Then("Verify logged in succesfully")
     public void verifyLoggedInSuccesfully() {
-        getLoginPage().myFormsButton.isDisplayed();
+        loginPage.myFormsButton.isDisplayed();
     }
 }

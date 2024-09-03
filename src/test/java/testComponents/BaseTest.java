@@ -10,6 +10,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
+import pageobjects.FormTemplatesPage;
 import pageobjects.LoginPage;
 
 import java.io.File;
@@ -25,6 +26,7 @@ import java.util.Properties;
 public class BaseTest {
     private static LoginPage loginPage;
     private static FormBuilderPage formBuilderPage;
+    private static FormTemplatesPage formTemplatesPage;
     private static String browserName;
     private static Properties prop;
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
@@ -36,7 +38,13 @@ public class BaseTest {
     public static WebDriver initializeDriver() throws IOException {
         if (getDriver() == null) {
 
-            browserName = getGlobalValue("browser") != null ? getGlobalValue("browser") : prop.getProperty("browser");
+            //browserName = getGlobalValue("browser") != null ? getGlobalValue("browser") : prop.getProperty("browser");
+            browserName = System.getProperty("browser");
+            if (browserName == null) {
+                // Fallback to properties file if system property is not set
+                browserName = getGlobalValue("browser");
+            }
+            System.out.println("Browser being used: " + browserName); // Debug line
 
             if (browserName.contains("chrome")) {
                 ChromeOptions chromeOptions = new ChromeOptions();
@@ -61,7 +69,7 @@ public class BaseTest {
         return getDriver();
     }
 
-    /*public String getScreenshot(String scenarioName, String testName, String timestamp) {
+    public String getScreenshot(String scenarioName, String testName, String timestamp) {
         WebDriver driver = getDriver();
         if (driver != null) {
             File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -77,7 +85,7 @@ public class BaseTest {
         } else {
             return "Driver is null, screenshot not taken.";
         }
-    }*/
+    }
 
     public static void closeDriver() {
         WebDriver driver = getDriver();
@@ -108,10 +116,16 @@ public class BaseTest {
         }
         return formBuilderPage;
     }
+    public static FormTemplatesPage getFormTemplatePage() {
+        if (formTemplatesPage == null) {
+            formTemplatesPage = new FormTemplatesPage(getDriver()); // Pass dependencies if needed
+        }
+        return formTemplatesPage;
+    }
 
     public static String getGlobalValue(String key) throws IOException {
         prop = new Properties();
-        FileInputStream fis=new FileInputStream("/Users/muberrakurt/Desktop/JotformFramework1/src/test/resources/GlobalData.properties");
+        FileInputStream fis=new FileInputStream("src/test/resources/GlobalData.properties");
         prop.load(fis);
         return prop.getProperty(key);
     }
