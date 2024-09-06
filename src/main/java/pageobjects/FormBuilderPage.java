@@ -34,7 +34,10 @@ public class FormBuilderPage extends AbstractComponent{
     @FindBy(id="siteNav_id_settings")
     public WebElement settings;
 
-    @FindBy(id="text")
+    @FindBy(id="siteNav_id_publish")
+    public WebElement publish;
+
+    @FindBy(id="title")
     public WebElement settingTitle;
 
    @FindBy(xpath = "(//div[@class='moreMenuLink'])[1]")
@@ -43,12 +46,17 @@ public class FormBuilderPage extends AbstractComponent{
    @FindBy(xpath = "(//div[@class='quick-preview'])[2]")
     public WebElement MenuviewOfTheForm;
 
-    @FindBy(css=".toggleIcon-wrapper")
+    @FindBy(id="toogleLeftPanel")
     public WebElement addFormElementButton;
 
-   public void landsOnTheFormBuilderPage() {
-       hoverAndClick(loginPage.products,loginPage.formBuilder);
+    @FindBy(css=".stageEmpty.isSmall")
+    public WebElement column1;
 
-   }
+    @FindBy(css=".jNewHeader-logo.iBlock")
+    public WebElement logo;
+
+    @FindBy(id="field_item_control_payment")
+    public WebElement productList;
+
 
 }

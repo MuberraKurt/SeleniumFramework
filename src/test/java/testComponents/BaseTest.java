@@ -24,12 +24,12 @@ import java.util.Date;
 import java.util.Properties;
 
 public class BaseTest {
+    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    private static String browserName;
+    private static Properties prop;
     private static LoginPage loginPage;
     private static FormBuilderPage formBuilderPage;
     private static FormTemplatesPage formTemplatesPage;
-    private static String browserName;
-    private static Properties prop;
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
         return driver.get();
@@ -57,9 +57,6 @@ public class BaseTest {
             } else if (browserName.equalsIgnoreCase("firefox")) {
                 WebDriverManager.firefoxdriver().setup();
                 driver.set(new FirefoxDriver());
-            } else if (browserName.equalsIgnoreCase("edge")) {
-                WebDriverManager.edgedriver().setup();
-                driver.set(new EdgeDriver());
             }
             getDriver().manage().deleteAllCookies();
             getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -69,23 +66,6 @@ public class BaseTest {
         return getDriver();
     }
 
-    public String getScreenshot(String scenarioName, String testName, String timestamp) {
-        WebDriver driver = getDriver();
-        if (driver != null) {
-            File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            String screenshotFolder = System.getProperty("user.dir") + "/reports/" + scenarioName + "_" + timestamp + "/ss";
-            String destFile = screenshotFolder + "/" + testName + "_" + timestamp + ".png";
-            new File(screenshotFolder).mkdirs();
-            try {
-                Files.copy(srcFile.toPath(), Paths.get(destFile));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return destFile;
-        } else {
-            return "Driver is null, screenshot not taken.";
-        }
-    }
 
     public static void closeDriver() {
         WebDriver driver = getDriver();
@@ -94,7 +74,7 @@ public class BaseTest {
                 driver.quit();
                 // Ensure the ThreadLocal variable is cleaned up
             } catch (Exception e) {
-                System.err.println("Tarayıcıyı kapatma sırasında hata oluştu: " + e.getMessage());
+                System.err.println("An error occurred while closing the browser: " + e.getMessage());
             }
         }
     }

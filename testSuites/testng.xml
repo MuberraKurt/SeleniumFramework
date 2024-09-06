@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="testSuites">
+<suite name="testSuites" parallel="tests" thread-count="2">
 <!--<listeners>
     <listener class-name="testComponents.Listeners"></listener>
 </listeners>-->
 
-    <test thread-count="2" name="TestRunner">
+    <test name="TestRunner">
         <classes>
             <class name="Runner.TestRunner"></class>
         </classes>

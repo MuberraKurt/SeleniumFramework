@@ -39,6 +39,15 @@ public class AbstractComponent {
         js.executeScript("arguments[0].scrollIntoView()", element);
     }
 
+    public void cleanValue(WebElement element) {
+        String inputText = element.getAttribute("value");
+        if( inputText != null ) {
+            for(int i=0; i<inputText.length();i++) {
+                element.sendKeys(Keys.BACK_SPACE);
+            }
+        }
+
+    }
     public void sendKeysToElement(WebElement element, String keysToSend){
         waitForElementToAppear(element);
         scrollByVisibilityofElement(element);
@@ -102,4 +111,16 @@ public class AbstractComponent {
         Actions actions = new Actions(driver);
         actions.moveToElement(element).doubleClick().perform();
     }
+
+    public void dragAndDrop(WebElement sourceLocator,WebElement destinationLocater){
+        waitForElementClickable(sourceLocator);
+        scrollByVisibilityofElement(sourceLocator);
+        waitForElementClickable(destinationLocater);
+        scrollByVisibilityofElement(destinationLocater);
+        Actions actions = new Actions(driver);
+        actions.dragAndDrop(sourceLocator, destinationLocater).perform();
+
+
+    }
+
 }

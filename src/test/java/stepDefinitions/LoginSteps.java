@@ -25,8 +25,8 @@ public class LoginSteps extends BaseTest {
     public void userGivesTheUsernameAndPassword() {
 
         loginPage.click(loginPage.siginButton);
-        loginPage.sendKeysToElement(loginPage.userNameField,"muberrakurt5@gmail.com");
-        loginPage.sendKeysToElement(loginPage.passwordField,"Kelebek1.");
+        loginPage.sendKeysToElement(loginPage.userNameField,"email");
+        loginPage.sendKeysToElement(loginPage.passwordField,"password");
         loginPage.click(loginPage.loginButton);
     }
 

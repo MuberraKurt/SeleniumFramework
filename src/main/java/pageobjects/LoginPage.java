@@ -23,7 +23,7 @@ public class LoginPage extends AbstractComponent {
     public WebElement loginButton;
 
     //Before Login or SignUp
-    @FindBy(css=".jfHeader-logoLink:first-of-type")
+    @FindBy(css=".jNewHeader-logo.iBlock")
     public WebElement heading;
 
     @FindBy(css=".jfHeader-menuListLink.jfHeader-dynamicLink.locale.jfHeader-login-action")
@@ -76,15 +76,8 @@ public class LoginPage extends AbstractComponent {
 
         //---
 
-    public void Launch_the_Website(String url){
-        driver.get(url);
-    }
 
-    public void Login(String username, String password){
-        click(siginButton);
-        sendKeysToElement(userNameField,username);
-        sendKeysToElement(passwordField,password);
-        click(loginButton);
-    }
+
+
 
 }
